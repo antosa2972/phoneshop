@@ -1,3 +1,4 @@
+
 drop table if exists phone2color;
 drop table if exists colors;
 drop table if exists stocks;

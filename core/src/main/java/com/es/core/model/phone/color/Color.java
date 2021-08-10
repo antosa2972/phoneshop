@@ -1,4 +1,4 @@
-package com.es.core.model.phone;
+package com.es.core.model.phone.color;
 
 public class Color {
     private Long id;
