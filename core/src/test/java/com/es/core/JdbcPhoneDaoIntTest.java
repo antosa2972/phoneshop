@@ -66,9 +66,7 @@ public class JdbcPhoneDaoIntTest {
         JdbcTestUtils.deleteFromTables(jdbcTemplate, SQL_PHONES_TABLE_NAME);
         jdbcPhoneDao.save(phone);
         Optional<Phone> optionalPhone = jdbcPhoneDao.get(KEY);
-        if (optionalPhone.isPresent()) {
-            assertEquals(optionalPhone.get().getId(), phone.getId());
-        }
+        assertNotNull(optionalPhone);
     }
 
     @Test

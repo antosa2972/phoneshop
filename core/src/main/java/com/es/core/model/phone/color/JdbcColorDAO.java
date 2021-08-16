@@ -2,10 +2,12 @@ package com.es.core.model.phone.color;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.Optional;
 
+@Component
 public class JdbcColorDAO implements ColorDAO {
     @Resource
     private JdbcTemplate jdbcTemplate;
