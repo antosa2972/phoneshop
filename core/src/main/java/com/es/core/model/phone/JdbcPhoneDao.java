@@ -1,5 +1,6 @@
 package com.es.core.model.phone;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -21,11 +22,12 @@ public class JdbcPhoneDao implements PhoneDao {
 
     @Resource
     private JdbcTemplate jdbcTemplate;
-
+    @Autowired
+    private PhoneBeanPropertyRowMapper phoneBeanPropertyRowMapper;
 
     public Optional<Phone> get(final Long key) {
         String query = SQL_GET_PHONE + key;
-        return Optional.ofNullable(jdbcTemplate.queryForObject(query, new PhoneBeanPropertyRowMapper()));
+        return Optional.ofNullable(jdbcTemplate.queryForObject(query, phoneBeanPropertyRowMapper));
     }
 
     public void save(final Phone phone) {
@@ -63,7 +65,7 @@ public class JdbcPhoneDao implements PhoneDao {
 
     public List<Phone> findAll(int offset, int limit) {
         String query = SQL_GET_ALL_PHONES + offset + " limit " + limit;
-        return jdbcTemplate.query(query, new PhoneBeanPropertyRowMapper());
+        return jdbcTemplate.query(query, phoneBeanPropertyRowMapper);
     }
 
 }
