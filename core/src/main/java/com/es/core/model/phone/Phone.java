@@ -1,5 +1,7 @@
 package com.es.core.model.phone;
 
+import com.es.core.model.phone.color.Color;
+
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Date;
@@ -271,5 +273,25 @@ public class Phone {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + id.hashCode() + brand.hashCode() + model.hashCode();
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+        Phone phone = (Phone) obj;
+        return this.id.equals(phone.id) && this.brand.equals(phone.brand) && this.model.equals(phone.model);
     }
 }
