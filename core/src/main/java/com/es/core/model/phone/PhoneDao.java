@@ -12,4 +12,9 @@ public interface PhoneDao {
     void save(Phone phone);
 
     List<Phone> findAll(int offset, int limit);
+
+    List<Phone> findAll(final String search, final String sortField, final String order,
+               final int offset, final int limit);
+    Long count(final String search, final String sortField, final String order,
+               final int offset, final int limit);
 }

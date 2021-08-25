@@ -7,6 +7,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.sql.Types;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +24,9 @@ public class JdbcPhoneDao implements PhoneDao {
     private static final String SQL_GET_ALL_PHONES = "select * from phones left join phone2color on phones.id=phone2color.phoneId" +
             " join colors on colors.id = phone2color.colorId ";
     public static final String SQL_GET_PHONE = "select * from phones where id= ";
+    private static final String SQL_SELECT_COUNT_FIND_ALL_EXTENDED = "select count(*) from phones ";
+    private static final String SQL_WHERE_SEARCH = "where phones.id in (select phoneId from stocks) and " +
+            "(select stock from stocks where phoneId = phones.id) > 0 and price is not null ";;
 
     @Resource
     private JdbcTemplate jdbcTemplate;
@@ -69,6 +74,40 @@ public class JdbcPhoneDao implements PhoneDao {
     public List<Phone> findAll(int offset, int limit) {
         String query = SQL_GET_ALL_PHONES + " offset " + offset + " limit " + limit;
         return jdbcTemplate.query(query, phoneResultSetExtractor);
+    }
+
+    @Override
+    public List<Phone> findAll(String search, String sortField, String order, int offset, int limit) {
+        String query = SQL_GET_ALL_PHONES + SQL_WHERE_SEARCH;
+        List<Object> objects = new ArrayList<>();
+        List<Integer> types = new ArrayList<>();
+        if (search != null) {
+            query = query + "and lower(model) like lower(?) ";
+            objects.add("%" + search + "%");
+            types.add(Types.VARCHAR);
+        }
+        if (sortField != null && order != null) {
+            query = query + String.format("group by phones.id order by %s %s ",sortField,order);
+        }
+        query = query + " offset " + offset + " limit " + limit;
+
+        int[] typesArray = types.stream()
+                .mapToInt(i->i)
+                .toArray();
+        return jdbcTemplate.query(query,objects.toArray(),typesArray,phoneResultSetExtractor);
+    }
+
+    @Override
+    public Long count(final String search, final String sortField, final String order,
+                      final int offset, final int limit) {
+        String request = SQL_SELECT_COUNT_FIND_ALL_EXTENDED + SQL_WHERE_SEARCH;
+        if (search != null) {
+            request = request + "and lower(model) like lower(?)";
+            return jdbcTemplate.queryForObject(request, new Object[]{"%" + search +
+                    "%"}, new int[]{Types.VARCHAR}, Long.class);
+        } else {
+            return jdbcTemplate.queryForObject(request, Long.class);
+        }
     }
 
 }
