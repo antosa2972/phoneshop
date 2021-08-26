@@ -5,7 +5,7 @@ import org.springframework.validation.ObjectError;
 
 import java.util.List;
 
-public class ValidationErrors implements Errors{
+public class ValidationErrors {
 
     private List<ObjectError> errors;
 

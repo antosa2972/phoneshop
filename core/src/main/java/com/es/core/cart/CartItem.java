@@ -9,10 +9,10 @@ public class CartItem {
     private Long quantity;
     private BigDecimal price;
 
-    public CartItem(Phone phone, Long quantity) {
+    public CartItem(Phone phone, Long quantity,BigDecimal price) {
         this.phone = phone;
         this.quantity = quantity;
-        this.price = phone.getPrice().multiply(BigDecimal.valueOf(quantity));
+        this.price = price;
     }
 
     public Phone getPhone() {

@@ -1,6 +1,6 @@
 package com.es.core.validator;
 
-public class ResponseErrors implements Errors {
+public class ResponseErrors {
 
     private String errorMessage;
 

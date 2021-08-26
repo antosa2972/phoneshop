@@ -59,7 +59,6 @@
         </tr>
         </thead>
         <c:forEach var="phone" items="${phones}">
-            <%--@elvariable id="phoneDto" type="com.es.core.cart.PhoneDto"--%>
             <form:form method="post" id="${phone.id}" modelAttribute="phoneDto">
                 <tr>
                     <td>
@@ -111,26 +110,4 @@
         });
     })
     </c:forEach>
-
-    function addToCart(phoneId) {
-        const id = $("#phoneId" + phoneId).val();
-        const quantity = $("#quantity" + phoneId).val();
-        $.ajax({
-            type: 'POST',
-            url: 'ajaxCart',
-            data: 'id=' + id + '&quantity=' + quantity,
-            success: function () {
-                $('#result' + phoneId).text('');
-                $('#error-result').text('');
-                $('#ajax-errors').text('');
-                $('#success-result').text('Product added to cart successfully');
-            },
-            error: function (message) {
-                $('#success-result').text('');
-                $('#error-result').text('Error ' + message.status + ' while adding to cart');
-                $('#ajax-errors').text(message.responseText);
-                $('#result' + phoneId).text('Wrong input');
-            }
-        });
-    }
 </script>

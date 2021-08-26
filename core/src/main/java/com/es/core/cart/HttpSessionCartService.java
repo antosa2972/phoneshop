@@ -1,6 +1,5 @@
 package com.es.core.cart;
 
-import com.es.core.exception.EmptyDatabaseParamException;
 import com.es.core.model.phone.*;
 import com.es.core.exception.OutOfStockException;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,7 @@ public class HttpSessionCartService implements CartService {
     private StockDao jdbcStockDao;
 
     @Override
-    public Cart getCart(HttpSession httpSession) {
+    public synchronized Cart getCart(HttpSession httpSession) {
         Cart cart = (Cart) httpSession.getAttribute(CART_SESSION_ATTR);
         if (cart == null) {
             cart = new Cart();
@@ -30,7 +29,7 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public void addPhone(Long phoneId, Long quantity, Cart cart) throws OutOfStockException, EmptyDatabaseParamException {
+    public synchronized void addPhone(Long phoneId, Long quantity, Cart cart) throws OutOfStockException, IllegalArgumentException {
         Optional<Phone> optionalPhone = jdbcPhoneDao.get(phoneId);
         Optional<Stock> optionalStock = jdbcStockDao.get(phoneId);
 
@@ -43,7 +42,7 @@ public class HttpSessionCartService implements CartService {
                 throw new OutOfStockException();
             }
         } else {
-            throw new EmptyDatabaseParamException("No stock or phone in data base");
+            throw new IllegalArgumentException("No stock or phone in data base");
         }
     }
 
@@ -54,13 +53,14 @@ public class HttpSessionCartService implements CartService {
             CartItem existingCartItem = cartItem.get();
             existingCartItem.setQuantity(existingCartItem.getQuantity() + quantity);
         } else {
-            cart.getCartItems().add(new CartItem(phone, quantity));
+            BigDecimal price = phone.getPrice().multiply(BigDecimal.valueOf(quantity));
+            cart.getCartItems().add(new CartItem(phone, quantity, price));
         }
         calculateCart(cart);
     }
 
     @Override
-    public void update(Map<Long, Long> items, Cart cart) {
+    public synchronized void update(Map<Long, Long> items, Cart cart) {
         items.keySet().stream()
                 .map(phoneId -> findCartItem(phoneId, cart))
                 .filter(Optional::isPresent)
@@ -70,9 +70,19 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public void remove(Long phoneId, Cart cart) {
+    public synchronized void remove(Long phoneId, Cart cart) {
         Optional<CartItem> optionalCartItem = findCartItem(phoneId, cart);
         optionalCartItem.ifPresent(cartItem -> cart.getCartItems().remove(cartItem));
+
+        Optional<Stock> optionalStock = jdbcStockDao.get(phoneId);
+        Stock stock;
+        CartItem cartItem;
+        if (optionalStock.isPresent() && optionalCartItem.isPresent()) {
+            stock = optionalStock.get();
+            cartItem = optionalCartItem.get();
+            jdbcStockDao.update(phoneId, stock.getStock() + cartItem.getQuantity(),
+                    stock.getReserved() - cartItem.getQuantity());
+        }
         calculateCart(cart);
     }
 

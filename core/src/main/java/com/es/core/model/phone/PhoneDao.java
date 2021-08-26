@@ -1,5 +1,6 @@
 package com.es.core.model.phone;
 
+import com.es.core.model.ParamsForSearch;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -13,8 +14,6 @@ public interface PhoneDao {
 
     List<Phone> findAll(int offset, int limit);
 
-    List<Phone> findAll(final String search, final String sortField, final String order,
-               final int offset, final int limit);
-    Long count(final String search, final String sortField, final String order,
-               final int offset, final int limit);
+    List<Phone> findAll(ParamsForSearch paramsForSearch);
+    Long count(ParamsForSearch paramsForSearch);
 }

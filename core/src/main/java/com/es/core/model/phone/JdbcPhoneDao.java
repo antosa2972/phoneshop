@@ -1,5 +1,6 @@
 package com.es.core.model.phone;
 
+import com.es.core.model.ParamsForSearch;
 import com.es.core.model.phone.color.Color;
 import com.es.core.model.phone.color.JdbcColorDAO;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -10,8 +11,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Types;
 import java.util.*;
 
@@ -45,8 +44,10 @@ public class JdbcPhoneDao implements PhoneDao {
         String query = SQL_GET_PHONE + key;
         Phone phone = jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Phone.class));
 
+        RowMapper<Long> idRowMapper = (rs, rowNum) -> rs.getLong("colorId");
+
         String colorIdQuery = SQL_SELECT_COLOR_IDS + key;
-        List<Long> colorIds = jdbcTemplate.query(colorIdQuery, new IdRowMapper());
+        List<Long> colorIds = jdbcTemplate.query(colorIdQuery, idRowMapper);
 
         if (colorIds != null && !colorIds.isEmpty()) {
             Set<Color> colorSet = new HashSet<>();
@@ -96,7 +97,14 @@ public class JdbcPhoneDao implements PhoneDao {
     }
 
     @Override
-    public List<Phone> findAll(String search, String sortField, String order, int offset, int limit) {
+    public List<Phone> findAll(ParamsForSearch paramsForSearch) {
+
+        String search = paramsForSearch.getSearch();
+        String sortField = paramsForSearch.getSortField();
+        String order = paramsForSearch.getOrder();
+        int offset = paramsForSearch.getOffset();
+        int limit = paramsForSearch.getLimit();
+
         String query = SQL_GET_ALL_PHONES + SQL_WHERE_SEARCH;
         List<Object> objects = new ArrayList<>();
         List<Integer> types = new ArrayList<>();
@@ -109,8 +117,7 @@ public class JdbcPhoneDao implements PhoneDao {
             query = query + String.format("group by phones.id,phone2color.colorId order by %s %s ", sortField, order);
         }
 
-        //query = query + "left join phone2color on phones.id=phone2color.phoneId left join colors on colors.id = phone2color.colorId ";
-        query = query + " offset " + offset + " limit " + limit;
+        query = query + " limit " + limit + " offset " + offset;
 
         int[] typesArray = types.stream()
                 .mapToInt(i -> i)
@@ -119,8 +126,11 @@ public class JdbcPhoneDao implements PhoneDao {
     }
 
     @Override
-    public Long count(final String search, final String sortField, final String order,
-                      final int offset, final int limit) {
+    public Long count(ParamsForSearch paramsForSearch) {
+
+
+        String search = paramsForSearch.getSearch();
+
         String request = SQL_SELECT_COUNT_FIND_ALL_EXTENDED + SQL_WHERE_SEARCH;
         if (search != null) {
             request = request + "and lower(model) like lower(?)";
@@ -128,14 +138,6 @@ public class JdbcPhoneDao implements PhoneDao {
                     "%"}, new int[]{Types.VARCHAR}, Long.class);
         } else {
             return jdbcTemplate.queryForObject(request, Long.class);
-        }
-    }
-
-    private class IdRowMapper implements RowMapper<Long> {
-
-        @Override
-        public Long mapRow(ResultSet resultSet, int i) throws SQLException {
-            return resultSet.getLong("colorId");
         }
     }
 }

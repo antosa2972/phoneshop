@@ -4,8 +4,10 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
 import com.es.core.cart.CartService;
-import com.es.core.filter.FilterService;
+import com.es.core.model.ParamsForSearch;
 import com.es.core.model.phone.Phone;
+import com.es.core.sortenums.SortField;
+import com.es.core.sortenums.SortOrder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +17,7 @@ import com.es.core.model.phone.PhoneDao;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Locale;
 
 @Controller
 @RequestMapping(value = "/productList")
@@ -24,8 +27,6 @@ public class ProductListPageController {
     private PhoneDao phoneDao;
     @Resource
     private CartService cartService;
-    @Resource
-    private FilterService filterService;
     @Resource
     private HttpSession httpSession;
 
@@ -37,13 +38,21 @@ public class ProductListPageController {
         if (page == null) {
             page = 1L;
         }
-        field = filterService.checkFieldVal(field);
-        order = filterService.checkOrderVal(order);
-        List<Phone> phoneList = phoneDao.findAll(search, field, order,((Long) ((page - 1) * QUANTITY_ON_PAGE)).intValue(),
+        if (field != null && order != null) {
+            try {
+                field = SortField.valueOf(field.toUpperCase(Locale.ROOT)).name();
+                order = SortOrder.valueOf(order.toUpperCase(Locale.ROOT)).name();
+            } catch (IllegalArgumentException e) {
+                field = null;
+                order = null;
+            }
+        }
+        long offset = (page - 1) * QUANTITY_ON_PAGE;
+        ParamsForSearch paramsForSearch = new ParamsForSearch(search, field, order, (int) offset,
                 QUANTITY_ON_PAGE.intValue());
+        List<Phone> phoneList = phoneDao.findAll(paramsForSearch);
 
-        Long phoneQuantity = phoneDao.count(search, field, order,((Long) ((page - 1) * QUANTITY_ON_PAGE)).intValue(),
-                QUANTITY_ON_PAGE.intValue());
+        Long phoneQuantity = phoneDao.count(paramsForSearch);
 
         long numOfPages = phoneQuantity / QUANTITY_ON_PAGE;
 

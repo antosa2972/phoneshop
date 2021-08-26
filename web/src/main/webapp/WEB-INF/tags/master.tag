@@ -8,6 +8,9 @@
 <head>
     <link href='http://fonts.googleapis.com/css?family=Lobster+Two' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/styles/main.css">
+    <script type="text/javascript">
+        <%@include file="/js/main.js"%>
+    </script>
 </head>
 <body class="product-list">
 <header>

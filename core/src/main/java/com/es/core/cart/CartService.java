@@ -1,6 +1,5 @@
 package com.es.core.cart;
 
-import com.es.core.exception.EmptyDatabaseParamException;
 import com.es.core.exception.OutOfStockException;
 
 import javax.servlet.http.HttpSession;
@@ -10,7 +9,7 @@ public interface CartService {
 
     Cart getCart(HttpSession httpSession);
 
-    void addPhone(Long phoneId, Long quantity,Cart cart) throws OutOfStockException, EmptyDatabaseParamException;
+    void addPhone(Long phoneId, Long quantity,Cart cart) throws OutOfStockException, IllegalArgumentException;
 
     /**
      * @param items
