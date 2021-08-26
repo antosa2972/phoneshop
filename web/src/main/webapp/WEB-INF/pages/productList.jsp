@@ -4,6 +4,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
+
 <head>
     <title><spring:theme code="title"/></title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/main.css">
@@ -54,8 +55,8 @@
         <td><spring:theme code="color"/></td>
         <td>
             <spring:theme code="displaySize"/>
-            <tags:sortLink field="display_size" order="asc"/>
-            <tags:sortLink field="display_size" order="desc"/>
+            <tags:sortLink field="displaySizeInches" order="asc"/>
+            <tags:sortLink field="displaySizeInches" order="desc"/>
         </td>
         <td>
             <spring:theme code="price"/>
@@ -67,6 +68,7 @@
     </tr>
     </thead>
     <c:forEach var="phone" items="${phones}">
+        <%--@elvariable id="phoneDto" type="com.es.core.cart.PhoneDto"--%>
         <form:form method="post" id="${phone.id}" modelAttribute="phoneDto">
             <tr>
                 <td>
@@ -98,12 +100,12 @@
     </c:forEach>
 </table>
 <div class="pages-links">
-    <a href="${pageContext.request.contextPath}/productList?field=${not empty param.field ? param.field : ''}
-    &order=${not empty param.order ? param.order : ''}&search=${not empty param.search ? param.search : ''}
-    &page=${empty param.page ? 1 : (param.page > 1 ? param.page - 1 : 1)}"><<< Previous page</a>
-    <a href="${pageContext.request.contextPath}/productList?field=${not empty param.field ? param.field : ''}
-    &order=${not empty param.order ? param.order : ''}&search=${not empty param.search ? param.search : ''}
-    &page=${empty param.page ? 2 : (param.page < pages ? param.page + 1 : pages)}">Next page >>></a>
+    <c:set var="field" scope="request" value="field=${param.field}"/>
+    <c:set var="search" scope="request" value="search=${param.search}"/>
+    <c:set var="order" scope="request" value="field=${param.order}"/>
+    <a href="${pageContext.request.contextPath}/productList?page=${empty param.page ? 1 : (param.page > 1 ? param.page - 1 : 1)}"><<< Previous page</a>
+    <a href="${pageContext.request.contextPath}/productList?page=${empty param.page ? 2 : (param.page < pages ? param.page + 1 : pages)}">Next
+        page >>></a>
 </div>
 </body>
 <script src="https://code.jquery.com/jquery-1.8.3.js"></script>
@@ -118,13 +120,13 @@
     </c:forEach>
 
     function addToCart(phoneId) {
-        var id = $("#phoneId" + phoneId).val();
-        var quantity = $("#quantity" + phoneId).val();
+        const id = $("#phoneId" + phoneId).val();
+        const quantity = $("#quantity" + phoneId).val();
         $.ajax({
             type: 'POST',
             url: 'ajaxCart',
             data: 'id=' + id + '&quantity=' + quantity,
-            success: function (message) {
+            success: function () {
                 $('#result' + phoneId).text('');
                 $('#error-result').text('');
                 $('#ajax-errors').text('');

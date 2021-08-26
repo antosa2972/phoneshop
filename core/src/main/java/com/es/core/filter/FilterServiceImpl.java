@@ -1,6 +1,7 @@
 package com.es.core.filter;
 
 import com.es.core.sortenums.SortField;
+import com.es.core.sortenums.SortOrder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,8 +24,8 @@ public class FilterServiceImpl implements FilterService {
     public String checkOrderVal(String order) {
         if (order != null) {
             try {
-                SortField sortField = SortField.valueOf(order);
-                return sortField.name();
+                SortOrder sortOrder = SortOrder.valueOf(order);
+                return sortOrder.name();
             }catch (IllegalArgumentException e){
                 return null;
             }
