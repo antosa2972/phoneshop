@@ -4,110 +4,103 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-
-<head>
-    <title><spring:theme code="title"/></title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/main.css">
-</head>
-<body>
-<p>
-    <spring:theme code="helloMessage"/>
-</p>
-<p>
-    <spring:theme code="found"/>
-    <c:out value="${phoneQuantity}"/> <spring:theme code="phones"/>
-</p>
-<hr>
-<p>
-<div class="under-head">
-    <form method="get">
-        <input name="search" value="${not empty param.search ? param.search : ''}"/>
-        <button><spring:theme code="search"/></button>
-    </form>
-    <div id="cart-div">
-        <spring:theme code="cart"/>
-        <c:out value="${cart.totalQuantity}"/>
-        <spring:theme code="items"/>
-        <c:out value="${cart.totalCost}"/>
-        <spring:theme code="usd"/>
+<tags:master pageTitle="Product List">
+    <head>
+        <title><spring:theme code="title"/></title>
+    </head>
+    <body>
+    <hr>
+    <p>
+    <div class="under-head">
+        <form method="get">
+            <input name="search" value="${not empty param.search ? param.search : ''}"/>
+            <button><spring:theme code="search"/></button>
+        </form>
     </div>
-</div>
-<div id="success-result">
-</div>
-<div id="error-result">
-</div>
-<div id="ajax-errors">
-</div>
-<table border="1px">
-    <thead>
-    <tr>
-        <td><spring:theme code="image"/></td>
-        <td>
-            <spring:theme code="brand"/>
-            <tags:sortLink field="brand" order="asc"/>
-            <tags:sortLink field="brand" order="desc"/>
-        </td>
-        <td>
-            <spring:theme code="model"/>
-            <tags:sortLink field="model" order="asc"/>
-            <tags:sortLink field="model" order="desc"/>
-        </td>
-        <td><spring:theme code="color"/></td>
-        <td>
-            <spring:theme code="displaySize"/>
-            <tags:sortLink field="displaySizeInches" order="asc"/>
-            <tags:sortLink field="displaySizeInches" order="desc"/>
-        </td>
-        <td>
-            <spring:theme code="price"/>
-            <tags:sortLink field="price" order="asc"/>
-            <tags:sortLink field="price" order="desc"/>
-        </td>
-        <td><spring:theme code="quantity"/></td>
-        <td><spring:theme code="action"/></td>
-    </tr>
-    </thead>
-    <c:forEach var="phone" items="${phones}">
-        <%--@elvariable id="phoneDto" type="com.es.core.cart.PhoneDto"--%>
-        <form:form method="post" id="${phone.id}" modelAttribute="phoneDto">
-            <tr>
-                <td>
-                    <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
-                </td>
-                <td><c:out value="${phone.brand}"/></td>
-                <td><c:out value="${phone.model}"/></td>
-                <td>
-                    <c:forEach var="color" items="${phone.colors}">
-                        <c:out value="${color.code}"/><br>
-                    </c:forEach>
-                </td>
-                <td><c:out value="${phone.displaySizeInches}"/>"</td>
-                <td>$ <c:out value="${phone.price}"/></td>
-                <td>
-                    <input class="quantity-input" type="text" id="quantity${phone.id}" name="quantity" value="1"/>
-                    <div class="result-error" id="result${phone.id}">
+    <h2>
+        <p class="bold-text">
+            <spring:theme code="found"/>
+            <c:out value="${phoneQuantity}"/> <spring:theme code="phones"/>
+        </p>
+    </h2>
+    <div id="success-result">
+    </div>
+    <div id="error-result">
+    </div>
+    <div id="ajax-errors">
+    </div>
+    <table border="1px">
+        <thead>
+        <tr>
+            <td><spring:theme code="image"/></td>
+            <td>
+                <spring:theme code="brand"/>
+                <tags:sortLink field="brand" order="asc"/>
+                <tags:sortLink field="brand" order="desc"/>
+            </td>
+            <td>
+                <spring:theme code="model"/>
+                <tags:sortLink field="model" order="asc"/>
+                <tags:sortLink field="model" order="desc"/>
+            </td>
+            <td><spring:theme code="color"/></td>
+            <td>
+                <spring:theme code="displaySize"/>
+                <tags:sortLink field="displaySizeInches" order="asc"/>
+                <tags:sortLink field="displaySizeInches" order="desc"/>
+            </td>
+            <td>
+                <spring:theme code="price"/>
+                <tags:sortLink field="price" order="asc"/>
+                <tags:sortLink field="price" order="desc"/>
+            </td>
+            <td><spring:theme code="quantity"/></td>
+            <td><spring:theme code="action"/></td>
+        </tr>
+        </thead>
+        <c:forEach var="phone" items="${phones}">
+            <%--@elvariable id="phoneDto" type="com.es.core.cart.PhoneDto"--%>
+            <form:form method="post" id="${phone.id}" modelAttribute="phoneDto">
+                <tr>
+                    <td>
+                        <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
+                    </td>
+                    <td><c:out value="${phone.brand}"/></td>
+                    <td><c:out value="${phone.model}"/></td>
+                    <td>
+                        <c:forEach var="color" items="${phone.colors}">
+                            <c:out value="${color.code}"/><br>
+                        </c:forEach>
+                    </td>
+                    <td><c:out value="${phone.displaySizeInches}"/>"</td>
+                    <td>$ <c:out value="${phone.price}"/></td>
+                    <td>
+                        <input class="quantity-input" type="text" id="quantity${phone.id}" name="quantity" value="1"/>
+                        <div class="result-error" id="result${phone.id}">
 
-                    </div>
-                    <input id="phoneId${phone.id}" name="phoneId" type="hidden" value="${phone.id}"/>
-                </td>
-                <td>
-                    <button>
-                        <spring:theme code="addToCart"/>
-                    </button>
-                </td>
-            </tr>
-        </form:form>
-    </c:forEach>
-</table>
-<div class="pages-links">
-    <c:set var="field" scope="request" value="field=${param.field}"/>
-    <c:set var="search" scope="request" value="search=${param.search}"/>
-    <c:set var="order" scope="request" value="field=${param.order}"/>
-    <a href="${pageContext.request.contextPath}/productList?page=${empty param.page ? 1 : (param.page > 1 ? param.page - 1 : 1)}"><<< Previous page</a>
-    <a href="${pageContext.request.contextPath}/productList?page=${empty param.page ? 2 : (param.page < pages ? param.page + 1 : pages)}">Next
-        page >>></a>
-</div>
-</body>
+                        </div>
+                        <input id="phoneId${phone.id}" name="phoneId" type="hidden" value="${phone.id}"/>
+                    </td>
+                    <td>
+                        <button>
+                            <spring:theme code="addToCart"/>
+                        </button>
+                    </td>
+                </tr>
+            </form:form>
+        </c:forEach>
+    </table>
+    <div class="pages-links">
+        <c:set var="field" scope="request" value="field=${param.field}"/>
+        <c:set var="search" scope="request" value="search=${param.search}"/>
+        <c:set var="order" scope="request" value="field=${param.order}"/>
+        <a href="${pageContext.request.contextPath}/productList?page=${empty param.page ? 1 : (param.page > 1 ? param.page - 1 : 1)}"><<<
+            Previous page</a>
+        <a href="${pageContext.request.contextPath}/productList?page=${empty param.page ? 2 : (param.page < pages ? param.page + 1 : pages)}">Next
+            page >>></a>
+    </div>
+    </body>
+</tags:master>
 <script src="https://code.jquery.com/jquery-1.8.3.js"></script>
 <script>
     <c:forEach var="phone" items="${phones}">
