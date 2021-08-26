@@ -106,7 +106,7 @@ public class JdbcPhoneDao implements PhoneDao {
             types.add(Types.VARCHAR);
         }
         if (sortField != null && order != null) {
-            query = query + String.format("group by phones.id order by %s %s ", sortField, order);
+            query = query + String.format("group by phones.id,phone2color.colorId order by %s %s ", sortField, order);
         }
 
         //query = query + "left join phone2color on phones.id=phone2color.phoneId left join colors on colors.id = phone2color.colorId ";
