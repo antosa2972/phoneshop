@@ -7,6 +7,7 @@
 <tags:master pageTitle="Product List">
     <head>
         <title><spring:theme code="title"/></title>
+        <script src="https://code.jquery.com/jquery-1.8.3.js"></script>
     </head>
     <body>
     <hr>
@@ -18,10 +19,8 @@
         </form>
     </div>
     <h2>
-        <p class="bold-text">
-            <spring:theme code="found"/>
-            <c:out value="${phoneQuantity}"/> <spring:theme code="phones"/>
-        </p>
+        <spring:theme code="found"/>
+        <c:out value="${phoneQuantity}"/> <spring:theme code="phones"/>
     </h2>
     <div id="success-result">
     </div>
@@ -59,34 +58,32 @@
         </tr>
         </thead>
         <c:forEach var="phone" items="${phones}">
-            <form:form method="post" id="${phone.id}" modelAttribute="phoneDto">
-                <tr>
-                    <td>
-                        <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
-                    </td>
-                    <td><c:out value="${phone.brand}"/></td>
-                    <td><c:out value="${phone.model}"/></td>
-                    <td>
-                        <c:forEach var="color" items="${phone.colors}">
-                            <c:out value="${color.code}"/><br>
-                        </c:forEach>
-                    </td>
-                    <td><c:out value="${phone.displaySizeInches}"/>"</td>
-                    <td>$ <c:out value="${phone.price}"/></td>
-                    <td>
-                        <input class="quantity-input" type="text" id="quantity${phone.id}" name="quantity" value="1"/>
-                        <div class="result-error" id="result${phone.id}">
+            <tr>
+                <td>
+                    <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
+                </td>
+                <td><c:out value="${phone.brand}"/></td>
+                <td><c:out value="${phone.model}"/></td>
+                <td>
+                    <c:forEach var="color" items="${phone.colors}">
+                        <c:out value="${color.code}"/><br>
+                    </c:forEach>
+                </td>
+                <td><c:out value="${phone.displaySizeInches}"/>"</td>
+                <td>$ <c:out value="${phone.price}"/></td>
+                <td>
+                    <input class="quantity-input" type="text" id="quantity${phone.id}" name="quantity" value="1"/>
+                    <div class="result-error" id="result${phone.id}">
 
-                        </div>
-                        <input id="phoneId${phone.id}" name="phoneId" type="hidden" value="${phone.id}"/>
-                    </td>
-                    <td>
-                        <button>
-                            <spring:theme code="addToCart"/>
-                        </button>
-                    </td>
-                </tr>
-            </form:form>
+                    </div>
+                    <input id="phoneId${phone.id}" name="phoneId" type="hidden" value="${phone.id}"/>
+                </td>
+                <td>
+                    <button onclick="addToCart(${phone.id})">
+                        <spring:theme code="addToCart"/>
+                    </button>
+                </td>
+            </tr>
         </c:forEach>
     </table>
     <div class="pages-links">
@@ -100,14 +97,3 @@
     </div>
     </body>
 </tags:master>
-<script src="https://code.jquery.com/jquery-1.8.3.js"></script>
-<script>
-    <c:forEach var="phone" items="${phones}">
-    jQuery(document).ready(function ($) {
-        $("#${phone.id}").submit(function (event) {
-            event.preventDefault();
-            addToCart(${phone.id});
-        });
-    })
-    </c:forEach>
-</script>

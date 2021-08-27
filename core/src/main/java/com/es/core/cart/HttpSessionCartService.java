@@ -75,11 +75,9 @@ public class HttpSessionCartService implements CartService {
         optionalCartItem.ifPresent(cartItem -> cart.getCartItems().remove(cartItem));
 
         Optional<Stock> optionalStock = jdbcStockDao.get(phoneId);
-        Stock stock;
-        CartItem cartItem;
         if (optionalStock.isPresent() && optionalCartItem.isPresent()) {
-            stock = optionalStock.get();
-            cartItem = optionalCartItem.get();
+            Stock stock = optionalStock.get();
+            CartItem cartItem = optionalCartItem.get();
             jdbcStockDao.update(phoneId, stock.getStock() + cartItem.getQuantity(),
                     stock.getReserved() - cartItem.getQuantity());
         }

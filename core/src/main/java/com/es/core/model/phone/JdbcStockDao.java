@@ -18,11 +18,7 @@ public class JdbcStockDao implements StockDao {
     @Override
     public Optional<Stock> get(Long key) {
         List<Stock> stocks = jdbcTemplate.query(SQL_GET_STOCK + key, new BeanPropertyRowMapper<>(Stock.class));
-        if (stocks != null) {
-            return Optional.ofNullable(stocks.get(0));
-        } else {
-            return Optional.empty();
-        }
+        return stocks.stream().findFirst();
     }
 
     @Override
