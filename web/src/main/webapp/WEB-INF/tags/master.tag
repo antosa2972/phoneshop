@@ -8,6 +8,7 @@
 <head>
     <link href='http://fonts.googleapis.com/css?family=Lobster+Two' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/styles/main.css">
+    <script src="https://code.jquery.com/jquery-1.8.3.js"></script>
     <script type="text/javascript">
         <%@include file="/js/main.js"%>
     </script>
@@ -23,10 +24,11 @@
             <spring:theme code="usd"/>
         </h2>
     </div>
-    <h1><a href="${pageContext.servletContext.contextPath}">
+    <a href="${pageContext.servletContext.contextPath}">
         PhoneShop
     </a>
-    </h1>
+    <br>
+    <br>
     <spring:theme code="helloMessage"/>
 </header>
 <main>
