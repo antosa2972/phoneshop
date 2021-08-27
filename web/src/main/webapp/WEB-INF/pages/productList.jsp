@@ -1,50 +1,99 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<p>
-    Hello from product list!
-</p>
-<p>
-    Found
-    <c:out value="${phones.size()}"/> phones.
-<table border="1px">
-    <thead>
-    <tr>
-        <td>Image</td>
-        <td>Brand</td>
-        <td>Model</td>
-        <td>Color</td>
-        <td>Display size</td>
-        <td>Price</td>
-        <td>Quantity</td>
-        <td>Action</td>
-    </tr>
-    </thead>
-    <c:forEach var="phone" items="${phones}">
-        <c:if test="${not empty phone.s}">
-
-        </c:if>
+<tags:master pageTitle="Product List">
+    <head>
+        <title><spring:theme code="title"/></title>
+        <script src="https://code.jquery.com/jquery-1.8.3.js"></script>
+    </head>
+    <body>
+    <hr>
+    <p>
+    <div class="under-head">
+        <form method="get">
+            <input name="search" value="${not empty param.search ? param.search : ''}"/>
+            <button><spring:theme code="search"/></button>
+        </form>
+    </div>
+    <h2>
+        <spring:theme code="found"/>
+        <c:out value="${phoneQuantity}"/> <spring:theme code="phones"/>
+    </h2>
+    <div id="success-result">
+    </div>
+    <div id="error-result">
+    </div>
+    <div id="ajax-errors">
+    </div>
+    <table border="1px">
+        <thead>
         <tr>
+            <td><spring:theme code="image"/></td>
             <td>
-                <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
+                <spring:theme code="brand"/>
+                <tags:sortLink field="brand" order="asc"/>
+                <tags:sortLink field="brand" order="desc"/>
             </td>
-            <td>${phone.brand}</td>
-            <td>${phone.model}</td>
             <td>
-                <c:forEach var="color" items ="${phone.colors}">
-                    ${color.code},
-                </c:forEach>
+                <spring:theme code="model"/>
+                <tags:sortLink field="model" order="asc"/>
+                <tags:sortLink field="model" order="desc"/>
             </td>
-            <td>${phone.displaySizeInches}</td>
-            <td>$ ${phone.price}</td>
+            <td><spring:theme code="color"/></td>
             <td>
-                <input class="quantity" type="text" name="quantity"
-                       value="${not empty error && phone.id == errorId ? param.quantity:1}">
-                <input type="hidden" name="productId" value="${phone.id}"></td>
-            <td>
-                <button>Add</button>
+                <spring:theme code="displaySize"/>
+                <tags:sortLink field="displaySizeInches" order="asc"/>
+                <tags:sortLink field="displaySizeInches" order="desc"/>
             </td>
+            <td>
+                <spring:theme code="price"/>
+                <tags:sortLink field="price" order="asc"/>
+                <tags:sortLink field="price" order="desc"/>
+            </td>
+            <td><spring:theme code="quantity"/></td>
+            <td><spring:theme code="action"/></td>
         </tr>
-    </c:forEach>
-</table>
-</p>
+        </thead>
+        <c:forEach var="phone" items="${phones}">
+            <tr>
+                <td>
+                    <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
+                </td>
+                <td><c:out value="${phone.brand}"/></td>
+                <td><c:out value="${phone.model}"/></td>
+                <td>
+                    <c:forEach var="color" items="${phone.colors}">
+                        <c:out value="${color.code}"/><br>
+                    </c:forEach>
+                </td>
+                <td><c:out value="${phone.displaySizeInches}"/>"</td>
+                <td>$ <c:out value="${phone.price}"/></td>
+                <td>
+                    <input class="quantity-input" type="text" id="quantity${phone.id}" name="quantity" value="1"/>
+                    <div class="result-error" id="result${phone.id}">
+
+                    </div>
+                    <input id="phoneId${phone.id}" name="phoneId" type="hidden" value="${phone.id}"/>
+                </td>
+                <td>
+                    <button onclick="addToCart(${phone.id})">
+                        <spring:theme code="addToCart"/>
+                    </button>
+                </td>
+            </tr>
+        </c:forEach>
+    </table>
+    <div class="pages-links">
+        <c:set var="field" scope="request" value="field=${param.field}"/>
+        <c:set var="search" scope="request" value="search=${param.search}"/>
+        <c:set var="order" scope="request" value="field=${param.order}"/>
+        <a href="${pageContext.request.contextPath}/productList?page=${empty param.page ? 1 : (param.page > 1 ? param.page - 1 : 1)}"><<<
+            Previous page</a>
+        <a href="${pageContext.request.contextPath}/productList?page=${empty param.page ? 2 : (param.page < pages ? param.page + 1 : pages)}">Next
+            page >>></a>
+    </div>
+    </body>
+</tags:master>

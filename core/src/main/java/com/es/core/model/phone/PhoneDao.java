@@ -1,5 +1,6 @@
 package com.es.core.model.phone;
 
+import com.es.core.model.ParamsForSearch;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -12,4 +13,7 @@ public interface PhoneDao {
     void save(Phone phone);
 
     List<Phone> findAll(int offset, int limit);
+
+    List<Phone> findAll(ParamsForSearch paramsForSearch);
+    Long count(ParamsForSearch paramsForSearch);
 }

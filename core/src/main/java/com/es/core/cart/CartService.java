@@ -1,19 +1,22 @@
 package com.es.core.cart;
 
+import com.es.core.exception.OutOfStockException;
+
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 public interface CartService {
 
-    Cart getCart();
+    Cart getCart(HttpSession httpSession);
 
-    void addPhone(Long phoneId, Long quantity);
+    void addPhone(Long phoneId, Long quantity,Cart cart) throws OutOfStockException, IllegalArgumentException;
 
     /**
      * @param items
      * key: {@link com.es.core.model.phone.Phone#id}
      * value: quantity
      */
-    void update(Map<Long, Long> items);
+    void update(Map<Long, Long> items, Cart cart);
 
-    void remove(Long phoneId);
+    void remove(Long phoneId, Cart cart);
 }
