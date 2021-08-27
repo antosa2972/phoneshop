@@ -25,10 +25,24 @@
     flex-direction: row;
     justify-content: space-between;
 }
+.tableClass{
+    padding-left: 1000px;
+}
+table{
+    width: 300px;
+    border-collapse: collapse;
+}
+td{
+    padding: 3px; /* Поля вокруг содержимого таблицы */
+    border: 1px solid black; /* Параметры рамки */
+}
 .bold-text{
     font-weight: bold;
 }
 #cart-div {
+    position: absolute;
+    right: 0;
+    width: 300px;
     border-width: 4px;
     border-color: black;
     border-radius: 3px;

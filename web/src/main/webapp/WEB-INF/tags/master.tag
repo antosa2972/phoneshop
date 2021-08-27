@@ -14,20 +14,20 @@
 </head>
 <body class="product-list">
 <header>
-    <h1><a href="${pageContext.servletContext.contextPath}">
-        PhoneShop
-    </a>
-    </h1>
-    <spring:theme code="helloMessage"/>
-    <h2>
-        <div id="cart-div">
+    <div id="cart-div">
+        <h2>
             <spring:theme code="cart"/>
             <c:out value=" ${cart.totalQuantity}, "/>
             <spring:theme code="items"/>
             <c:out value=" ${cart.totalCost}"/>
             <spring:theme code="usd"/>
-        </div>
-    </h2>
+        </h2>
+    </div>
+    <h1><a href="${pageContext.servletContext.contextPath}">
+        PhoneShop
+    </a>
+    </h1>
+    <spring:theme code="helloMessage"/>
 </header>
 <main>
     <jsp:doBody/>
