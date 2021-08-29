@@ -17,5 +17,11 @@ public class PhoneDtoValidator implements Validator {
     public void validate(Object o, Errors errors) {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "quantity", "message.empty.quantity");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "id", "message.empty.id");
+        if (!errors.hasErrors()) {
+            PhoneDto dto = (PhoneDto) o;
+            if (dto.getQuantity() <= 0) {
+                errors.rejectValue("quantity", "message.illegalQuantity");
+            }
+        }
     }
 }

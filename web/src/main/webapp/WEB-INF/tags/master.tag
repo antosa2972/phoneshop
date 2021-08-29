@@ -12,23 +12,30 @@
     <script type="text/javascript">
         <%@include file="/js/main.js"%>
     </script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
 </head>
-<body class="product-list">
+<body>
 <header>
     <div id="cart-div">
-        <h2>
-            <spring:theme code="cart"/>
-            <c:out value=" ${cart.totalQuantity}, "/>
-            <spring:theme code="items"/>
-            <c:out value=" ${cart.totalCost}"/>
-            <spring:theme code="usd"/>
-        </h2>
+        <a href="${pageContext.servletContext.contextPath}/cart">
+            <h2>
+                <spring:theme code="cart"/>
+                <c:out value=" ${cart.totalQuantity}, "/>
+                <spring:theme code="items"/>
+                <c:out value=" ${cart.totalCost}"/>
+                <spring:theme code="usd"/>
+            </h2>
+        </a>
     </div>
-    <a href="${pageContext.servletContext.contextPath}">
-        PhoneShop
-    </a>
-    <br>
-    <br>
+    <h2>
+        <a href="${pageContext.servletContext.contextPath}">
+            PhoneShop
+        </a>
+    </h2>
     <spring:theme code="helloMessage"/>
 </header>
 <main>

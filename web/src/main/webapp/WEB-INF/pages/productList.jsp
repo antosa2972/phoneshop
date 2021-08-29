@@ -12,12 +12,16 @@
     <body>
     <hr>
     <p>
-    <div class="under-head">
-        <form method="get">
-            <input name="search" value="${not empty param.search ? param.search : ''}"/>
-            <button><spring:theme code="search"/></button>
-        </form>
-    </div>
+    <form method="get">
+        <div class="input-group mb-3 w-25">
+            <input name="search" class="form-control" placeholder="search" aria-label="search"
+                   aria-describedby="basic-addon2"
+                   value="${not empty param.search ? param.search : ''}">
+            <div class="input-group-append">
+                <button class="btn btn-info"><spring:theme code="search"/></button>
+            </div>
+        </div>
+    </form>
     <h2>
         <spring:theme code="found"/>
         <c:out value="${phoneQuantity}"/> <spring:theme code="phones"/>
@@ -63,7 +67,8 @@
                     <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
                 </td>
                 <td><c:out value="${phone.brand}"/></td>
-                <td><c:out value="${phone.model}"/></td>
+                <td><a href="${pageContext.servletContext.contextPath}/productDetails/${phone.id}"><c:out
+                        value="${phone.model}"/></a></td>
                 <td>
                     <c:forEach var="color" items="${phone.colors}">
                         <c:out value="${color.code}"/><br>
@@ -73,13 +78,11 @@
                 <td>$ <c:out value="${phone.price}"/></td>
                 <td>
                     <input class="quantity-input" type="text" id="quantity${phone.id}" name="quantity" value="1"/>
-                    <div class="result-error" id="result${phone.id}">
-
-                    </div>
+                    <div class="result-error" id="result${phone.id}"></div>
                     <input id="phoneId${phone.id}" name="phoneId" type="hidden" value="${phone.id}"/>
                 </td>
                 <td>
-                    <button onclick="addToCart(${phone.id})">
+                    <button onclick="addToCart(${phone.id})" class="btn btn-success">
                         <spring:theme code="addToCart"/>
                     </button>
                 </td>

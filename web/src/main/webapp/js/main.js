@@ -4,7 +4,7 @@ function addToCart(phoneId) {
     phoneDto["quantity"] = $("#quantity" + phoneId).val();
     $.ajax({
         type: 'POST',
-        url: 'ajaxCart',
+        url: '/phoneshop-web/ajaxCart',
         data: JSON.stringify(phoneDto),
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',

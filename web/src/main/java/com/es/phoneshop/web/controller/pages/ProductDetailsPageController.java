@@ -8,7 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -25,13 +24,13 @@ public class ProductDetailsPageController {
     HttpSession httpSession;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String showProductDetailsInfo(@PathVariable("id") Long phoneId, Model model){
+    public String showProductDetailsInfo(@PathVariable("id") Long phoneId, Model model) {
         Optional<Phone> optionalPhone = jdbcPhoneDao.get(phoneId);
         Phone phone = null;
-        if(optionalPhone.isPresent()){
+        if (optionalPhone.isPresent()) {
             phone = optionalPhone.get();
         }
-        model.addAttribute("phone",phone);
+        model.addAttribute("phone", phone);
         model.addAttribute("cart", httpSessionCartService.getCart(httpSession));
         return "productDetails";
     }
