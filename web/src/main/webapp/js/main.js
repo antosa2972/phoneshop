@@ -8,7 +8,9 @@ function addToCart(phoneId) {
         data: JSON.stringify(phoneDto),
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
-        success: function () {
+        success: function (dataReceived) {
+            $('#cart-quantity').text(dataReceived['totalQuantity'] + ',');
+            $('#cart-totalCost').text(dataReceived['totalCost']);
             $('#result' + phoneId).text('');
             $('#error-result').text('');
             $('#ajax-errors').text('');

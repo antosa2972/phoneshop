@@ -1,6 +1,5 @@
 package com.es.core.cart;
 
-import com.es.core.exception.NoElementWithSuchIdException;
 import com.es.core.exception.OutOfStockException;
 import com.es.core.model.phone.Phone;
 
@@ -19,7 +18,7 @@ public interface CartService {
      * key: {@link com.es.core.model.phone.Phone#id}
      * value: quantity
      */
-    List<Phone> update(Map<Long, Long> items, Cart cart);
+    void update(Map<Long, Long> items, Cart cart);
 
-    void remove(Long phoneId, Cart cart) throws NoElementWithSuchIdException;
+    void remove(Long phoneId, Cart cart) throws IllegalArgumentException;
 }

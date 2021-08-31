@@ -40,12 +40,12 @@
                 <input type="text" id="quantity${phone.id}" name="quantity" class="form-control"
                        placeholder="quantity" aria-label="quantity" aria-describedby="basic-addon2"
                        value="1">
-                <div class="result-error" id="result${phone.id}"></div>
                 <input id="phoneId${phone.id}" name="phoneId" type="hidden" value="${phone.id}"/>
                 <div class="input-group-append">
                     <button onclick="addToCart(${phone.id})" class="btn btn-success"><spring:theme
                             code="addToCart"/></button>
                 </div>
+                <div class="result-error" id="result${phone.id}"></div>
             </div>
         </div>
         <div class="block-right">

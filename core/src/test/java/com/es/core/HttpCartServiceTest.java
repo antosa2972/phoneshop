@@ -5,7 +5,6 @@ import com.es.core.cart.Cart;
 import com.es.core.cart.CartItem;
 import com.es.core.cart.CartService;
 import com.es.core.cart.HttpSessionCartService;
-import com.es.core.exception.NoElementWithSuchIdException;
 import com.es.core.exception.OutOfStockException;
 import com.es.core.model.phone.Phone;
 import com.es.core.model.phone.PhoneDao;
@@ -25,8 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -104,13 +102,13 @@ public class HttpCartServiceTest {
     }
 
     @Test
-    public void testRemove() throws NoElementWithSuchIdException {
+    public void testRemove() throws IllegalArgumentException {
         httpSessionCartService.remove(phone.getId(), cart);
         assertEquals(cart.getTotalCost(), BigDecimal.valueOf(0L));
     }
 
-    @Test(expected = NoElementWithSuchIdException.class)
-    public void testRemoveThrowsException() throws NoElementWithSuchIdException {
+    @Test(expected = IllegalArgumentException.class)
+    public void testRemoveThrowsException() throws IllegalArgumentException {
         httpSessionCartService.remove(nonExistingId, cart);
     }
 
@@ -118,8 +116,7 @@ public class HttpCartServiceTest {
     public void testUpdate() {
         updateMap.put(phone.getId(), newQuantity);
         when(jdbcStockDao.get(anyLong())).thenReturn(Optional.of(stock));
-        List<Phone> outOfStockPhones = httpSessionCartService.update(updateMap, cart);
+        httpSessionCartService.update(updateMap, cart);
         assertEquals(cart.getTotalCost(), BigDecimal.valueOf(500L));
-        assertTrue(outOfStockPhones.isEmpty());
     }
 }

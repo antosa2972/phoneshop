@@ -1,6 +1,5 @@
 package com.es.core.cart;
 
-import com.es.core.exception.NoElementWithSuchIdException;
 import com.es.core.model.phone.*;
 import com.es.core.exception.OutOfStockException;
 import org.springframework.stereotype.Service;
@@ -8,10 +7,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class HttpSessionCartService implements CartService {
@@ -63,8 +61,7 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public synchronized List<Phone> update(Map<Long, Long> items, Cart cart) {
-        List<Phone> outOfStockPhones = new ArrayList<>();
+    public synchronized void update(Map<Long, Long> items, Cart cart) {
         items.keySet().stream()
                 .map(phoneId -> findCartItem(phoneId, cart))
                 .filter(Optional::isPresent)
@@ -75,12 +72,9 @@ public class HttpSessionCartService implements CartService {
                     Long quantityDifference = quantity - cartItem.getQuantity();
                     if (checkQuantity(phoneId, quantityDifference)) {
                         cartItem.setQuantity(cartItem.getQuantity() + quantityDifference);
-                    } else {
-                        outOfStockPhones.add(cartItem.getPhone());
                     }
                 });
         calculateCart(cart);
-        return outOfStockPhones;
     }
 
     private boolean checkQuantity(Long phoneId, Long quantityDifference) {
@@ -97,12 +91,12 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public synchronized void remove(Long phoneId, Cart cart) throws NoElementWithSuchIdException {
+    public synchronized void remove(Long phoneId, Cart cart) throws IllegalArgumentException {
         Optional<CartItem> optionalCartItem = findCartItem(phoneId, cart);
         if (optionalCartItem.isPresent()) {
             cart.getCartItems().remove(optionalCartItem.get());
         } else {
-            throw new NoElementWithSuchIdException(phoneId);
+            throw new IllegalArgumentException(phoneId.toString());
         }
 
         Optional<Stock> optionalStock = jdbcStockDao.get(phoneId);

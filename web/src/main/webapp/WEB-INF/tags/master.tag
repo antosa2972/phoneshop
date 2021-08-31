@@ -24,9 +24,13 @@
         <a href="${pageContext.servletContext.contextPath}/cart">
             <h2>
                 <spring:theme code="cart"/>
-                <c:out value=" ${cart.totalQuantity}, "/>
-                <spring:theme code="items"/>
-                <c:out value=" ${cart.totalCost}"/>
+                <div id="cart-quantity" class="l">
+                    <c:out value="${cart.totalQuantity}"/>,
+                </div>
+                <spring:theme code="items"/>:
+                <div id="cart-totalCost" class="l">
+                    <c:out value="${cart.totalCost}"/>
+                </div>
                 <spring:theme code="usd"/>
             </h2>
         </a>

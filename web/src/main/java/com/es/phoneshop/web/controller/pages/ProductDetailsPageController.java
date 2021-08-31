@@ -17,19 +17,15 @@ import java.util.Optional;
 @RequestMapping(value = "/productDetails/{id}")
 public class ProductDetailsPageController {
     @Resource
-    PhoneDao jdbcPhoneDao;
+    private PhoneDao jdbcPhoneDao;
     @Resource
-    CartService httpSessionCartService;
+    private CartService httpSessionCartService;
     @Resource
-    HttpSession httpSession;
+    private HttpSession httpSession;
 
     @RequestMapping(method = RequestMethod.GET)
     public String showProductDetailsInfo(@PathVariable("id") Long phoneId, Model model) {
-        Optional<Phone> optionalPhone = jdbcPhoneDao.get(phoneId);
-        Phone phone = null;
-        if (optionalPhone.isPresent()) {
-            phone = optionalPhone.get();
-        }
+        Phone phone = jdbcPhoneDao.get(phoneId).orElse(null);
         model.addAttribute("phone", phone);
         model.addAttribute("cart", httpSessionCartService.getCart(httpSession));
         return "productDetails";

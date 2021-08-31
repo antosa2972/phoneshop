@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class GlobalController {
 
     @RequestMapping(value = {"/404"}, method = RequestMethod.GET)
-    public String NotFoundPage() {
+    public String notFoundPage() {
         return "404";
     }
 }

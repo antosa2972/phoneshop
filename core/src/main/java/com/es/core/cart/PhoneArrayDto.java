@@ -2,7 +2,7 @@ package com.es.core.cart;
 
 public class PhoneArrayDto {
 
-    private String [] phoneId;
+    private String[] phoneId;
     private String[] quantity;
 
     public String[] getPhoneId() {

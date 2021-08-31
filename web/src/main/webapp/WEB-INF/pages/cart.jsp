@@ -18,16 +18,27 @@
     </form>
     <h2><spring:theme code="cart"/></h2>
     <div id="error-result">
-        <c:if test="${not empty error}">
-            <c:out value="${error}"/>
+        <c:if test="${error eq true}">
+            <spring:theme code="cart.update.error"/>
+        </c:if>
+    </div>
+    <div id="error-result">
+        <c:if test="${empty cart}">
+            <spring:theme code="cart.empty.msg"/>
         </c:if>
     </div>
     <div id="success-result">
-        <c:if test="${not empty message}">
-            <c:out value="${message}"/>
+        <c:if test="${successUpdate eq true}">
+            <spring:theme code="cart.update.success"/>
         </c:if>
     </div>
-    <form:form id="update-form" method="post" action="${pageContext.servletContext.contextPath}/cart" modelAttribute="phoneArrayDto">
+    <div id="success-result">
+        <c:if test="${successDelete eq true}">
+            <spring:theme code="cart.delete.success"/>
+        </c:if>
+    </div>
+    <form:form id="update-form" method="post" action="${pageContext.servletContext.contextPath}/cart"
+               modelAttribute="phoneArrayDto">
         <table>
             <thead>
             <tr>
@@ -84,18 +95,19 @@
                     </td>
                     <td>
                         <input class="quantity-input" type="text" id="quantity${cartItem.phone.id}" name="quantity"
-                               value="${(not empty errorsId or not empty outOfStockPhones) ? paramValues['quantity'][status.index] : cartItem.quantity }"/>
+                               value="${not empty errorsId && errorsId.contains(cartItem.phone.id) ? paramValues['cartItem.quantity'][status.index] : cartItem.quantity }"/>
                         <div class="result-error" id="result${cartItem.phone.id}"></div>
                         <c:if test="${fn:contains(errorsId, cartItem.phone.id)}">
-                            <spring:theme code="wrongInput"/>
+                            <div class="result-error">
+                                <spring:theme code="wrongInputOrStock"/>
+                            </div>
                         </c:if>
-                        <c:if test="${fn:contains(outOfStockPhones, cartItem.phone)}">
-                            <spring:theme code="outOfStock"/>
-                        </c:if>
-                        <input id="phoneId${cartItem.phone.id}" name="phoneId" type="hidden" value="${cartItem.phone.id}"/>
+                        <input id="phoneId${cartItem.phone.id}" name="phoneId" type="hidden"
+                               value="${cartItem.phone.id}"/>
                     </td>
                     <td>
-                        <button class="btn btn-danger" formaction="${pageContext.servletContext.contextPath}/cart/${cartItem.phone.id}">
+                        <button class="btn btn-danger"
+                                formaction="${pageContext.servletContext.contextPath}/cart/${cartItem.phone.id}">
                             <spring:theme code="deleteFromCartBtn"/>
                         </button>
                     </td>
