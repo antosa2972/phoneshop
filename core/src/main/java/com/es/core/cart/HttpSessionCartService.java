@@ -91,7 +91,7 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public synchronized void remove(Long phoneId, Cart cart) throws IllegalArgumentException {
+    public synchronized void remove(Long phoneId, Cart cart) {
         Optional<CartItem> optionalCartItem = findCartItem(phoneId, cart);
         if (optionalCartItem.isPresent()) {
             cart.getCartItems().remove(optionalCartItem.get());

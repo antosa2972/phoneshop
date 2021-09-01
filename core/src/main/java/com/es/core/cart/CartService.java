@@ -20,5 +20,5 @@ public interface CartService {
      */
     void update(Map<Long, Long> items, Cart cart);
 
-    void remove(Long phoneId, Cart cart) throws IllegalArgumentException;
+    void remove(Long phoneId, Cart cart) ;
 }
