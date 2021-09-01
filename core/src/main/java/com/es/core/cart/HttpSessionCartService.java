@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class HttpSessionCartService implements CartService {
@@ -65,14 +66,38 @@ public class HttpSessionCartService implements CartService {
                 .map(phoneId -> findCartItem(phoneId, cart))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .forEach(cartItem -> cartItem.setQuantity(items.get(cartItem.getPhone().getId())));
+                .forEach(cartItem -> {
+                    Long phoneId = cartItem.getPhone().getId();
+                    Long quantity = items.get(cartItem.getPhone().getId());
+                    Long quantityDifference = quantity - cartItem.getQuantity();
+                    if (checkQuantity(phoneId, quantityDifference)) {
+                        cartItem.setQuantity(cartItem.getQuantity() + quantityDifference);
+                    }
+                });
         calculateCart(cart);
+    }
+
+    private boolean checkQuantity(Long phoneId, Long quantityDifference) {
+        Optional<Stock> optionalStock = jdbcStockDao.get(phoneId);
+        if (optionalStock.isPresent()) {
+            Stock stock = optionalStock.get();
+            if (stock.getStock() - stock.getReserved() >= quantityDifference) {
+                jdbcStockDao.update(phoneId, stock.getStock() - quantityDifference,
+                        stock.getReserved() + quantityDifference);
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
     public synchronized void remove(Long phoneId, Cart cart) {
         Optional<CartItem> optionalCartItem = findCartItem(phoneId, cart);
-        optionalCartItem.ifPresent(cartItem -> cart.getCartItems().remove(cartItem));
+        if (optionalCartItem.isPresent()) {
+            cart.getCartItems().remove(optionalCartItem.get());
+        } else {
+            throw new IllegalArgumentException(phoneId.toString());
+        }
 
         Optional<Stock> optionalStock = jdbcStockDao.get(phoneId);
         if (optionalStock.isPresent() && optionalCartItem.isPresent()) {

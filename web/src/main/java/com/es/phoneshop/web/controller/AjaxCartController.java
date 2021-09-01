@@ -38,12 +38,12 @@ public class AjaxCartController {
         quantityValidator.validate(phoneDto,bindingResult);
         if(bindingResult.hasErrors()){
             ValidationErrors validationErrors = new ValidationErrors(bindingResult.getAllErrors());
-            return badRequest().body(validationErrors);
+            return badRequest().body(validationErrors.getErrors().get(0).getCode());
         }
         try {
             Cart currentCart = cartService.getCart(httpSession);
             cartService.addPhone(phoneDto.getId(), phoneDto.getQuantity(), currentCart);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(cartService.getCart(httpSession));
         } catch (OutOfStockException | IllegalArgumentException e) {
             ResponseErrors errors = new ResponseErrors(e.getMessage());
             return ResponseEntity.badRequest().body(errors);
