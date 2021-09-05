@@ -13,7 +13,7 @@
     <br>
     <form method="get" action="${pageContext.servletContext.contextPath}/productList">
         <button class="btn btn-outline-primary">
-            <spring:theme code="buttonBackToProductList"/>
+            <spring:theme code="button.back.to.productList"/>
         </button>
     </form>
     <h2><spring:theme code="cart"/></h2>
@@ -118,8 +118,10 @@
     <button form="update-form" class="btn btn-secondary">
         <spring:theme code="updateCart"/>
     </button>
-    <button form="update-form" class="btn btn-secondary">
+    <button form="goToOrder" class="btn btn-secondary">
         <spring:theme code="makeOrder"/>
     </button>
+
+    <form id="goToOrder" action="${pageContext.servletContext.contextPath}/order" method="get"/>
     </body>
 </tags:master>

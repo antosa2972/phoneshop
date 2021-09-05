@@ -3,12 +3,14 @@ package com.es.core.model.phone;
 import com.es.core.model.ParamsForSearch;
 import com.es.core.model.phone.color.Color;
 import com.es.core.model.phone.color.JdbcColorDAO;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.sql.Types;
@@ -40,6 +42,8 @@ public class JdbcPhoneDao implements PhoneDao {
     @Resource
     private JdbcColorDAO jdbcColorDAO;
 
+    @Override
+    @Transactional(readOnly = true)
     public Optional<Phone> get(final Long key) {
         String query = SQL_GET_PHONE + key;
         Phone phone = jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Phone.class));
@@ -59,7 +63,8 @@ public class JdbcPhoneDao implements PhoneDao {
         }
         return Optional.ofNullable(phone);
     }
-
+    @Override
+    @Transactional(rollbackFor = DataAccessException.class)
     public void save(final Phone phone) {
         MapSqlParameterSource in = new MapSqlParameterSource();
         in.addValue("id", phone.getId());
@@ -90,13 +95,15 @@ public class JdbcPhoneDao implements PhoneDao {
         in.addValue("description", phone.getDescription());
         namedParameterJdbcTemplate.update(SQL_INSERT_PHONE, in);
     }
-
+    @Override
+    @Transactional(readOnly = true)
     public List<Phone> findAll(int offset, int limit) {
         String query = SQL_GET_ALL_PHONES + " offset " + offset + " limit " + limit;
         return jdbcTemplate.query(query, phoneResultSetExtractor);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Phone> findAll(ParamsForSearch paramsForSearch) {
 
         String search = paramsForSearch.getSearch();
@@ -127,7 +134,6 @@ public class JdbcPhoneDao implements PhoneDao {
 
     @Override
     public Long count(ParamsForSearch paramsForSearch) {
-
 
         String search = paramsForSearch.getSearch();
 

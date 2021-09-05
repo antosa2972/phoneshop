@@ -109,6 +109,11 @@ public class HttpSessionCartService implements CartService {
         calculateCart(cart);
     }
 
+    @Override
+    public void deleteCart(HttpSession httpSession) {
+        httpSession.removeAttribute("cart");
+    }
+
 
     private Optional<CartItem> findCartItem(Long phoneId, Cart cart) {
         return cart.getCartItems().stream()
