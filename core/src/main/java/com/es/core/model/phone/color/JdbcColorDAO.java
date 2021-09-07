@@ -18,14 +18,12 @@ public class JdbcColorDAO implements ColorDAO {
     private static final String SQL_UPDATE_COLOR = "insert into colors(id,code) values (?,?)";
 
     @Override
-    @Transactional(readOnly = true)
     public Optional<Color> get(Long key) {
         return Optional.ofNullable(jdbcTemplate.queryForObject(SQL_GET_COLOR + key,
                 new BeanPropertyRowMapper<Color>(Color.class)));
     }
 
     @Override
-    @Transactional(rollbackFor = DataAccessException.class)
     public void save(Color color) {
         jdbcTemplate.update(SQL_UPDATE_COLOR, color.getId(), color.getCode());
     }

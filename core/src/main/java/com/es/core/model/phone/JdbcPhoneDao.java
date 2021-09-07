@@ -43,7 +43,6 @@ public class JdbcPhoneDao implements PhoneDao {
     private JdbcColorDAO jdbcColorDAO;
 
     @Override
-    @Transactional(readOnly = true)
     public Optional<Phone> get(final Long key) {
         String query = SQL_GET_PHONE + key;
         Phone phone = jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Phone.class));
@@ -64,7 +63,6 @@ public class JdbcPhoneDao implements PhoneDao {
         return Optional.ofNullable(phone);
     }
     @Override
-    @Transactional(rollbackFor = DataAccessException.class)
     public void save(final Phone phone) {
         MapSqlParameterSource in = new MapSqlParameterSource();
         in.addValue("id", phone.getId());

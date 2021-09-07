@@ -11,8 +11,6 @@ import java.util.regex.Pattern;
 @Service
 public class OrderDataDtoValidator implements Validator {
 
-    private static final String REGEX_NAME_SURNAME = "[\\\\p{Lu}\\\\p{M}][\\\\p{L}\\\\p{M},.'-]+(?: [\\\\p{L}\\\\p{M},.'-]+)*";
-    private static final String REGEX_ADDRESS = "^[a-zA-Z0-9,\\\\s]+$";
     private static final String REGEX_PHONE = "^\\\\+\\\\d{12}$";
 
 
@@ -29,15 +27,6 @@ public class OrderDataDtoValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "phone", "Empty phone field");
         if (!errors.hasErrors()) {
             OrderDataDto orderDataDto = (OrderDataDto) o;
-            if(validateWithRegex(orderDataDto.getFirstName(),REGEX_NAME_SURNAME)){
-                errors.rejectValue("firstName","firstName");
-            }
-            if(validateWithRegex(orderDataDto.getLastName(),REGEX_NAME_SURNAME)){
-                errors.rejectValue("lastName","lastName");
-            }
-            if(validateWithRegex(orderDataDto.getAddress(),REGEX_ADDRESS)){
-                errors.rejectValue("address","address");
-            }
             if(validateWithRegex(orderDataDto.getPhone(),REGEX_PHONE)){
                 errors.rejectValue("phone","phone");
             }

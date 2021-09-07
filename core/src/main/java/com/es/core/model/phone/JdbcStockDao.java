@@ -18,14 +18,12 @@ public class JdbcStockDao implements StockDao {
     private static final String SQL_UPDATE = "update stocks set stock = %d, reserved = %d where phoneId = %d";
 
     @Override
-    @Transactional(readOnly = true)
     public Optional<Stock> get(Long key) {
         List<Stock> stocks = jdbcTemplate.query(SQL_GET_STOCK + key, new BeanPropertyRowMapper<>(Stock.class));
         return stocks.stream().findFirst();
     }
 
     @Override
-    @Transactional(rollbackFor = DataAccessException.class)
     public void update(Long key, Long stock, Long reserved) {
         String query = String.format(SQL_UPDATE, stock, reserved, key);
         jdbcTemplate.update(query);

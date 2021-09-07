@@ -2,7 +2,9 @@ package com.es.core.cart;
 
 import com.es.core.model.phone.*;
 import com.es.core.exception.OutOfStockException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -20,6 +22,7 @@ public class HttpSessionCartService implements CartService {
     private StockDao jdbcStockDao;
 
     @Override
+    @Transactional(readOnly = true)
     public synchronized Cart getCart(HttpSession httpSession) {
         Cart cart = (Cart) httpSession.getAttribute(CART_SESSION_ATTR);
         if (cart == null) {
@@ -30,6 +33,7 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
+    @Transactional(rollbackFor = DataAccessException.class)
     public synchronized void addPhone(Long phoneId, Long quantity, Cart cart) throws OutOfStockException, IllegalArgumentException {
         Optional<Phone> optionalPhone = jdbcPhoneDao.get(phoneId);
         Optional<Stock> optionalStock = jdbcStockDao.get(phoneId);
@@ -48,7 +52,7 @@ public class HttpSessionCartService implements CartService {
     }
 
     private void addToCart(Long quantity, Stock stock, Phone phone, Cart cart) {
-        jdbcStockDao.update(phone.getId(), stock.getStock() - quantity, stock.getReserved() + quantity);
+        jdbcStockDao.update(phone.getId(), stock.getStock().longValue(), stock.getReserved() + quantity);
         Optional<CartItem> cartItem = findCartItem(phone.getId(), cart);
         if (cartItem.isPresent()) {
             CartItem existingCartItem = cartItem.get();
@@ -61,6 +65,7 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
+    @Transactional(rollbackFor = DataAccessException.class)
     public synchronized void update(Map<Long, Long> items, Cart cart) {
         items.keySet().stream()
                 .map(phoneId -> findCartItem(phoneId, cart))
@@ -76,13 +81,12 @@ public class HttpSessionCartService implements CartService {
                 });
         calculateCart(cart);
     }
-
     private boolean checkQuantity(Long phoneId, Long quantityDifference) {
         Optional<Stock> optionalStock = jdbcStockDao.get(phoneId);
         if (optionalStock.isPresent()) {
             Stock stock = optionalStock.get();
             if (stock.getStock() - stock.getReserved() >= quantityDifference) {
-                jdbcStockDao.update(phoneId, stock.getStock() - quantityDifference,
+                jdbcStockDao.update(phoneId, stock.getStock().longValue(),
                         stock.getReserved() + quantityDifference);
                 return true;
             }
@@ -91,6 +95,7 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
+    @Transactional(rollbackFor = DataAccessException.class)
     public synchronized void remove(Long phoneId, Cart cart) {
         Optional<CartItem> optionalCartItem = findCartItem(phoneId, cart);
         if (optionalCartItem.isPresent()) {

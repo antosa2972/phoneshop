@@ -36,14 +36,12 @@ public class JdbcOrderDao implements OrderDao {
     private OrderResultSetExtractor orderResultSetExtractor;
 
     @Override
-    @Transactional(readOnly = true)
     public Optional<Order> get(Long key) {
         String query = SELECT_ORDER_SQL + key;
         return Optional.ofNullable(jdbcTemplate.query(query, orderResultSetExtractor));
     }
 
     @Override
-    @Transactional(rollbackFor = DataAccessException.class)
     public Long save(Order order) {
         MapSqlParameterSource in = new MapSqlParameterSource();
         in.addValue("id", order.getId());
