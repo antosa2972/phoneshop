@@ -32,11 +32,11 @@ public class OrderServiceImpl implements OrderService {
             if (stock != null && stock.getStock() - orderItem.getQuantity() > 0) {
                 jdbcStockDao.update(orderItem.getPhone().getId(), stock.getStock() - orderItem.getQuantity(),
                         stock.getReserved() - orderItem.getQuantity());
-            }else {
+            } else {
                 check.set(true);
             }
         });
-        if(check.get()){
+        if (check.get()) {
             throw new OutOfStockException();
         }
         order.setId(UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE);
