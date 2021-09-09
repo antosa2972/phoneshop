@@ -14,7 +14,7 @@
         <div class="block-left">
             <br>
             <form action="${pageContext.servletContext.contextPath}/productList" method="get">
-                <button class="btn btn-outline-primary"><spring:theme code="buttonBackToProductList"/></button>
+                <button class="btn btn-outline-primary"><spring:theme code="button.back.to.productList"/></button>
             </form>
             <div id="success-result">
             </div>
