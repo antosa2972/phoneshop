@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -41,6 +42,17 @@ public class OrderServiceImpl implements OrderService {
         }
         order.setId(UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE);
         return jdbcOrderDao.save(order);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Order> getOrders(int limit, int offset) {
+        return jdbcOrderDao.getOrders(limit, offset);
+    }
+
+    @Override
+    public void updateStatus(OrderStatus orderStatus, Long orderId) {
+        jdbcOrderDao.updateStatus(orderStatus, orderId);
     }
 
     private Order getOrder(Cart cart, OrderDataDto orderDataDto, Long deliveryPrice) {

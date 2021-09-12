@@ -1,15 +1,16 @@
 package com.es.core.model.order;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Order
-{
+public class Order {
     private Long id;
     private List<OrderItem> orderItems;
     /**
-     *  A sum of order item prices;
+     * A sum of order item prices;
      */
     private BigDecimal subtotal;
     private BigDecimal deliveryPrice;
@@ -23,14 +24,16 @@ public class Order
     private String deliveryAddress;
     private String contactPhoneNo;
     private String additionalInfo;
+    private Timestamp date;
 
     private OrderStatus status;
 
-    public Order(){
+    public Order() {
         orderItems = new ArrayList<>();
         subtotal = BigDecimal.ZERO;
         totalPrice = BigDecimal.ZERO;
         deliveryPrice = BigDecimal.ZERO;
+        date = Timestamp.from(Instant.now());
     }
 
     public Long getId() {
@@ -109,6 +112,14 @@ public class Order
         return status;
     }
 
+    public Timestamp getDate() {
+        return date;
+    }
+
+    public void setDate(Timestamp date) {
+        this.date = date;
+    }
+
     public void setStatus(OrderStatus status) {
         this.status = status;
     }
@@ -119,5 +130,25 @@ public class Order
 
     public void setAdditionalInfo(String additionalInfo) {
         this.additionalInfo = additionalInfo;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + id.hashCode() + date.hashCode() + totalPrice.hashCode();
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+        Order order = (Order) obj;
+        return this.id.equals(order.id);
     }
 }

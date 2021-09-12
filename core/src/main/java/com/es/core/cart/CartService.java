@@ -1,10 +1,8 @@
 package com.es.core.cart;
 
 import com.es.core.exception.OutOfStockException;
-import com.es.core.model.phone.Phone;
 
 import javax.servlet.http.HttpSession;
-import java.util.List;
 import java.util.Map;
 
 public interface CartService {

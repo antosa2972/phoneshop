@@ -2,9 +2,6 @@ package com.es.core;
 
 import com.es.core.model.phone.JdbcPhoneDao;
 import com.es.core.model.phone.Phone;
-import com.es.core.model.phone.color.Color;
-import com.es.core.model.phone.color.JdbcColorDAO;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import java.util.Optional;

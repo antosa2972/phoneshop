@@ -1,9 +1,7 @@
 package com.es.core.model.phone;
 
 import com.es.core.model.ParamsForSearch;
-import org.springframework.jdbc.core.RowMapper;
 
-import java.sql.ResultSet;
 import java.util.List;
 import java.util.Optional;
 

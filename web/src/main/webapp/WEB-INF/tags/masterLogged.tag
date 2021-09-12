@@ -4,7 +4,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-
 <html>
 <head>
     <link href='http://fonts.googleapis.com/css?family=Lobster+Two' rel='stylesheet' type='text/css'>
@@ -26,24 +25,8 @@
             <a href="${pageContext.servletContext.contextPath}/admin/orders">
                 <sec:authentication property="principal.username"/>
             </a>,
-            <a href="${pageContext.servletContext.contextPath}/logout">Logout</a>
+            <a href="${pageContext.servletContext.contextPath}/logout">logout</a>
         </sec:authorize>
-        <sec:authorize access="hasRole('ADMIN') eq false">
-                <a href="${pageContext.servletContext.contextPath}/login">Login</a>
-        </sec:authorize>
-        <a href="${pageContext.servletContext.contextPath}/cart">
-            <h2>
-                <spring:theme code="cart"/>
-                <div id="cart-quantity" class="l">
-                    <c:out value="${cart.totalQuantity}"/>,
-                </div>
-                <spring:theme code="items"/>:
-                <div id="cart-totalCost" class="l">
-                    <c:out value="${cart.totalCost}"/>
-                </div>
-                <spring:theme code="usd"/>
-            </h2>
-        </a>
     </div>
     <h2>
         <a href="${pageContext.servletContext.contextPath}">

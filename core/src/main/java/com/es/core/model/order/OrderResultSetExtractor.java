@@ -1,7 +1,5 @@
 package com.es.core.model.order;
 
-import com.es.core.cart.CartItem;
-import com.es.core.model.phone.Phone;
 import com.es.core.model.phone.PhoneDao;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -11,6 +9,7 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +33,7 @@ public class OrderResultSetExtractor implements ResultSetExtractor<Order> {
         order.setContactPhoneNo(resultSet.getString("orders.contactPhoneNo"));
         order.setAdditionalInfo(resultSet.getString("orders.additionalInfo"));
         order.setStatus(OrderStatus.valueOf(resultSet.getString("orders.status")));
+        order.setDate(resultSet.getObject("orders.date", Timestamp.class));
         do {
             Long orderItemId = resultSet.getLong("orderItems.id");
             Long phoneId = resultSet.getLong("orderItems.phoneId");
