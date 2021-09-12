@@ -20,6 +20,8 @@ public class JdbcOrderDao implements OrderDao {
     public static final String SQL_INSERT_INTO_ORDER_ITEMS = "insert into orderItems (phoneId,orderId,quantity) " +
             "values (?,?,?)";
     public static final String SELECT_ORDERS = "select * from orders left join orderItems on orders.id = orderItems.orderId";
+    public static final String UPDATE_ORDER_STATUS_SQL = "update orders set orders.status = '";
+    public static final String SQL_NEEDED_ORDER = "' where orders.id = ";
     @Resource
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -68,7 +70,7 @@ public class JdbcOrderDao implements OrderDao {
 
     @Override
     public void updateStatus(OrderStatus orderStatus, Long key) {
-        String query = "update orders set orders.status = '" + orderStatus.name() + "' where orders.id = " + key;
+        String query = UPDATE_ORDER_STATUS_SQL + orderStatus.name() + SQL_NEEDED_ORDER + key;
         jdbcTemplate.update(query);
     }
 }

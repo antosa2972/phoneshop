@@ -3,7 +3,6 @@ package com.es.core.model.phone;
 import com.es.core.model.ParamsForSearch;
 import com.es.core.model.phone.color.Color;
 import com.es.core.model.phone.color.JdbcColorDAO;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

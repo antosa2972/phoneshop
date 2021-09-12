@@ -1,21 +1,19 @@
 package com.es.phoneshop.web.controller.pages;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
-
 import com.es.core.cart.CartService;
 import com.es.core.model.ParamsForSearch;
 import com.es.core.model.phone.Phone;
+import com.es.core.model.phone.PhoneDao;
 import com.es.core.sortenums.SortField;
 import com.es.core.sortenums.SortOrder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import com.es.core.model.phone.PhoneDao;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Locale;
 

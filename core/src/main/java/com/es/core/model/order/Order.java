@@ -1,13 +1,9 @@
 package com.es.core.model.order;
 
-import com.es.core.model.phone.Phone;
-
 import java.math.BigDecimal;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Order {
@@ -153,6 +149,6 @@ public class Order {
             return false;
         }
         Order order = (Order) obj;
-        return this.id.equals(order.id) && this.date.equals(order.date) && this.totalPrice.equals(order.totalPrice);
+        return this.id.equals(order.id);
     }
 }

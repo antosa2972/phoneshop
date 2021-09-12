@@ -16,8 +16,7 @@
 
     <context:annotation-config/>
 
-    <!-- Importing java-config class, which are annotated with @Configuration -->
-    <bean name="SomeJavaConfig" class="com.es.phoneshop.web.controller.WebSecurityConfig"/>
+    <bean name="SecurityConfig" class="com.es.phoneshop.web.controller.WebSecurityConfig"/>
 
     <bean id="themeSource" class="org.springframework.ui.context.support.ResourceBundleThemeSource">
         <property name="basenamePrefix" value="lang-"/>

@@ -126,12 +126,12 @@
     <c:if test="${order.status.name().equals('NEW')}">
         <form id="change-status-delivered" action="${pageContext.servletContext.contextPath}/admin/orders/${order.id}">
             <input name="orderId" type="hidden" value="${order.id}">
-            <input type="hidden" name="checker" value="${true}">
+            <input type="hidden" name="orderStatus" value="DELIVERED">
         </form>
 
         <form id="change-status-rejected" action="${pageContext.servletContext.contextPath}/admin/orders/${order.id}">
             <input name="orderId" type="hidden" value="${order.id}">
-            <input type="hidden" name="checker" value="${false}">
+            <input type="hidden" name="orderStatus" value="REJECTED">
         </form>
 
         <c:if test="${order.status.name().equals('REJECTED')}">

@@ -1,6 +1,5 @@
 package com.es.phoneshop.web.controller.pages.admin;
 
-import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderDao;
 import com.es.core.model.order.OrderStatus;
 import com.es.core.order.OrderService;
@@ -9,7 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 @Controller
 @RequestMapping(value = "/admin/orders/{id}")
@@ -29,8 +27,8 @@ public class OrderOverviewPageControllerAdmin {
 
     @RequestMapping(method = RequestMethod.POST)
     public String changeOrderStatus(@PathVariable("id") Long orderId,
-                                    @RequestParam(name = "checker") boolean checker) {
-        if (checker) {
+                                    @RequestParam(name = "orderStatus") String orderStatus) {
+        if (OrderStatus.DELIVERED.name().equals(orderStatus)) {
             orderServiceImpl.updateStatus(OrderStatus.DELIVERED, orderId);
         } else {
             orderServiceImpl.updateStatus(OrderStatus.REJECTED, orderId);

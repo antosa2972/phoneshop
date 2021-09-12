@@ -1,7 +1,10 @@
 package com.es.core.cart;
 
-import com.es.core.model.phone.*;
 import com.es.core.exception.OutOfStockException;
+import com.es.core.model.phone.Phone;
+import com.es.core.model.phone.PhoneDao;
+import com.es.core.model.phone.Stock;
+import com.es.core.model.phone.StockDao;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,7 +14,6 @@ import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class HttpSessionCartService implements CartService {
