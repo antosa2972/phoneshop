@@ -11,6 +11,8 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +36,7 @@ public class OrderResultSetExtractor implements ResultSetExtractor<Order> {
         order.setContactPhoneNo(resultSet.getString("orders.contactPhoneNo"));
         order.setAdditionalInfo(resultSet.getString("orders.additionalInfo"));
         order.setStatus(OrderStatus.valueOf(resultSet.getString("orders.status")));
+        order.setDate(resultSet.getObject("orders.date", Timestamp.class));
         do {
             Long orderItemId = resultSet.getLong("orderItems.id");
             Long phoneId = resultSet.getLong("orderItems.phoneId");

@@ -14,6 +14,11 @@
     <import resource="classpath:context/applicationContext-core.xml"/>
     <import resource="classpath:context/applicationContext-demoda.xml"/>
 
+    <context:annotation-config/>
+
+    <!-- Importing java-config class, which are annotated with @Configuration -->
+    <bean name="SomeJavaConfig" class="com.es.phoneshop.web.controller.WebSecurityConfig"/>
+
     <bean id="themeSource" class="org.springframework.ui.context.support.ResourceBundleThemeSource">
         <property name="basenamePrefix" value="lang-"/>
     </bean>

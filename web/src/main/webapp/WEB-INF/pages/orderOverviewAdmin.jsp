@@ -13,7 +13,7 @@
     <body>
     <br>
     <h2>
-        <spring:theme code="order.page"/> ${id}
+        <spring:theme code="order.page"/> ${id}, <spring:theme code="admin.status"/> : ${order.status}
     </h2>
     <table class="table-bordered w-50">
         <tr>
@@ -44,7 +44,8 @@
                 </td>
                 <td><c:out value="${orderItem.phone.displaySizeInches}"/>"</td>
                 <td><c:out value="${orderItem.quantity}"/></td>
-                <td><c:out value="${orderItem.phone.price.multiply(orderItem.quantity)}"/> <spring:theme code="usd"/></td>
+                <td><c:out value="${orderItem.phone.price.multiply(orderItem.quantity)}"/> <spring:theme
+                        code="usd"/></td>
             </tr>
         </c:forEach>
         <tr>
@@ -116,10 +117,45 @@
             </td>
         </tr>
     </table>
-    <form action="${pageContext.servletContext.contextPath}/productList">
-        <button class="btn btn-outline-primary">
-            <spring:theme code="button.back.to.productList"/>
-        </button>
-    </form>
+
+    <form id="back-form"></form>
+    <button form="back-form" formmethod="get" formaction="${pageContext.servletContext.contextPath}/admin/orders"
+            class="btn btn-secondary">
+        <spring:theme code="admin.button.back"/>
+    </button>
+    <c:if test="${order.status.name().equals('NEW')}">
+        <form id="change-status-delivered" action="${pageContext.servletContext.contextPath}/admin/orders/${order.id}">
+            <input name="orderId" type="hidden" value="${order.id}">
+            <input type="hidden" name="checker" value="${true}">
+        </form>
+
+        <form id="change-status-rejected" action="${pageContext.servletContext.contextPath}/admin/orders/${order.id}">
+            <input name="orderId" type="hidden" value="${order.id}">
+            <input type="hidden" name="checker" value="${false}">
+        </form>
+
+        <c:if test="${order.status.name().equals('REJECTED')}">
+            <button disabled form="change-status-delivered" formmethod="post" class="btn btn-secondary">
+                <spring:theme code="admin.button.delivered"/>
+            </button>
+        </c:if>
+        <c:if test="${!(order.status.name().equals('REJECTED'))}">
+            <button form="change-status-delivered" formmethod="post" class="btn btn-secondary">
+                <spring:theme code="admin.button.delivered"/>
+            </button>
+        </c:if>
+
+        <c:if test="${order.status.name().equals('DELIVERED')}">
+            <button disabled form="change-status-rejected" formmethod="post" class="btn btn-secondary">
+                <spring:theme code="admin.button.rejected"/>
+            </button>
+        </c:if>
+
+        <c:if test="${!(order.status.name().equals('DELIVERED'))}">
+            <button form="change-status-rejected" formmethod="post" class="btn btn-secondary">
+                <spring:theme code="admin.button.rejected"/>
+            </button>
+        </c:if>
+    </c:if>
     </body>
 </tags:masterLogged>

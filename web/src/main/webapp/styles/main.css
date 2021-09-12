@@ -86,6 +86,14 @@ header #cart-div {
     padding-right: 30px;
     text-align: right;
 }
+header #login-div {
+    font: 12pt/10pt sans-serif;
+    position: absolute;
+    right: 0;
+    width: 400px;
+    padding-right: 30px;
+    text-align: right;
+}
 
 .block-left {
     position: absolute;

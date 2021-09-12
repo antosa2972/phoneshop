@@ -69,8 +69,9 @@ create table orders
     lastName              VARCHAR(50),
     deliveryAddress       VARCHAR(100),
     contactPhoneNo        VARCHAR(15),
-    additionalInfo VARCHAR(500),
-    status                ENUM ('NEW', 'DELIVERED', 'REJECTED')
+    additionalInfo        VARCHAR(500),
+    status                ENUM ('NEW', 'DELIVERED', 'REJECTED'),
+    date                  TIMESTAMP
 );
 create table orderItems
 (
