@@ -45,7 +45,6 @@
                 <c:set var="index" value="${status.index}"/>
                 <tr>
                     <td>
-                        <form:hidden path="quickOrderElements[${index}].index" value="${index}"/>
                         <form:input path="quickOrderElements[${index}].model"/>
                         <div class="result-error">
                             <form:errors path="quickOrderElements[${index}].model"/>
