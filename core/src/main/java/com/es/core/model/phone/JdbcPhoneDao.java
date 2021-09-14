@@ -3,6 +3,7 @@ package com.es.core.model.phone;
 import com.es.core.model.ParamsForSearch;
 import com.es.core.model.phone.color.Color;
 import com.es.core.model.phone.color.JdbcColorDAO;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -31,6 +32,7 @@ public class JdbcPhoneDao implements PhoneDao {
     private static final String SQL_WHERE_SEARCH = "where (phones.id in (select phoneId from stocks) and " +
             "(SELECT STOCK FROM STOCKS WHERE PHONEID = PHONES.ID AND STOCK > 0) and price is not null) ";
     public static final String SQL_SELECT_COLOR_IDS = "select colorId from phone2color where phoneId= ";
+    public static final String SQL_GET_PHONE_BY_MODEL = "select * from phones where phones.model = '";
 
     @Resource
     private JdbcTemplate jdbcTemplate;
@@ -44,11 +46,24 @@ public class JdbcPhoneDao implements PhoneDao {
     @Override
     public Optional<Phone> get(final Long key) {
         String query = SQL_GET_PHONE + key;
-        Phone phone = jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Phone.class));
+        return getPhoneAndColors(query);
+    }
 
+    @Override
+    public Optional<Phone> get(String model) {
+        String query = SQL_GET_PHONE_BY_MODEL + model + "'";
+        return getPhoneAndColors(query);
+    }
+
+    private Optional<Phone> getPhoneAndColors(String query) {
+        Phone phone;
+        try {
+            phone = jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Phone.class));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
         RowMapper<Long> idRowMapper = (rs, rowNum) -> rs.getLong("colorId");
-
-        String colorIdQuery = SQL_SELECT_COLOR_IDS + key;
+        String colorIdQuery = SQL_SELECT_COLOR_IDS + phone.getId();
         List<Long> colorIds = jdbcTemplate.query(colorIdQuery, idRowMapper);
 
         if (colorIds != null && !colorIds.isEmpty()) {
@@ -61,6 +76,7 @@ public class JdbcPhoneDao implements PhoneDao {
         }
         return Optional.ofNullable(phone);
     }
+
     @Override
     public void save(final Phone phone) {
         MapSqlParameterSource in = new MapSqlParameterSource();
@@ -92,6 +108,7 @@ public class JdbcPhoneDao implements PhoneDao {
         in.addValue("description", phone.getDescription());
         namedParameterJdbcTemplate.update(SQL_INSERT_PHONE, in);
     }
+
     @Override
     @Transactional(readOnly = true)
     public List<Phone> findAll(int offset, int limit) {
